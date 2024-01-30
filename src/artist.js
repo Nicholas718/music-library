@@ -1,17 +1,14 @@
-const createArtist = async (req, res) => {
-  const { name, genre } = req.body;
+const express = require("express");
+const artistRouter = require("./routes/artist");
 
-  try {
-    const {
-      rows: [artist],
-    } = await db.query(
-      `INSERT INTO Artists (name, genre) VALUES ($1, $2) RETURNING *`,
-      [name, genre]
-    );
-    res.status(201).json(artist);
-  } catch (err) {
-    res.status(500).json(err.message);
-  }
-};
+const app = express();
 
-module.exports = { createArtist };
+app.use(express.json());
+
+app.use("/artists", artistRouter);
+
+app.get("/", (_req, res) => {
+  res.send("Hello World!");
+});
+
+module.exports = app;
